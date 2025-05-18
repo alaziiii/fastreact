@@ -43,7 +43,6 @@ const TypedText: React.FC<TypedTextProps> = ({ text, delay = 0, speed = 50 }) =>
     if (isIntersecting && !hasStarted) {
       setHasStarted(true);
       
-      // Delay start of typing
       const startTimeout = setTimeout(() => {
         const interval = setInterval(() => {
           setCurrentIndex((prevIndex: number) => {
@@ -113,7 +112,7 @@ const Hero: React.FC = () => {
       const observer = new IntersectionObserver(
         ([entry]) => {
           if (entry.isIntersecting && iframeRef.current) {
-            iframeRef.current.src = "https://my.spline.design/earthdayandnight-aR5pB6lD4IBaq230SAgOMacr/?quality=low";
+            iframeRef.current.src = "https://my.spline.design/earthdayandnightcopy-Ld5pB6lD4IBaq230SAgOMacr/?quality=low";
             observer.unobserve(iframeRef.current);
           }
         },
@@ -151,19 +150,18 @@ const Hero: React.FC = () => {
       <div className="absolute inset-0 w-full h-full z-0">
         <iframe
           ref={iframeRef}
-          width="40%"
+          width="100%"
           height="100%"
           className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
           allow="autoplay; fullscreen"
           loading="lazy"
           title="Earth Day and Night Spline"
-          style={{ pointerEvents: 'none' }}
           onLoad={handleIframeLoad}
         ></iframe>
       </div>
 
       {/* Gradient overlay for better text readability and visual effect */}
-      <div className="absolute inset-0 bg-gradient-to-r from-slate-900/80 via-slate-800/60 to-slate-900/50 z-10"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-slate-900/60 via-slate-800/40 to-slate-900/30 z-10"></div>
 
       {/* Animated particles effect */}
       <div className="absolute inset-0 z-5 opacity-30">
