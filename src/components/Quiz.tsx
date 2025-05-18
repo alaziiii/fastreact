@@ -373,7 +373,7 @@ const Quiz: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-3xl font-bold mb-6 text-center text-blue-300">Umwelt-Quiz</h2>
+          <h2 className="text-3xl font-bold mb-6 text-center text-blue-300">Quiz</h2>
           <h3 className="text-xl font-semibold mb-4">Gib deinen Namen ein</h3>
           <input
             type="text"
