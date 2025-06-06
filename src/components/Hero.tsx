@@ -106,26 +106,18 @@ const Hero: React.FC = () => {
   const [isLoaded, setIsLoaded] = React.useState<boolean>(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   
-  // Lazy load the iframe
+  // Load the iframe immediately
   useEffect(() => {
     if (iframeRef.current) {
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting && iframeRef.current) {
-            iframeRef.current.src = "https://my.spline.design/earthdayandnightcopy-Ld5pB6lD4IBaq230SAgOMacr/?quality=low";
-            observer.unobserve(iframeRef.current);
-          }
-        },
-        { threshold: 0.1 }
-      );
+      // Set the source directly without lazy loading
+      iframeRef.current.src = "https://my.spline.design/earthdayandnightcopy-Ld5pB6lD4IBaq230SAgOMacr/";
       
-      observer.observe(iframeRef.current);
+      // Set loaded to true after a short delay to show the iframe
+      const timer = setTimeout(() => {
+        setIsLoaded(true);
+      }, 1000);
       
-      return () => {
-        if (iframeRef.current) {
-          observer.disconnect();
-        }
-      };
+      return () => clearTimeout(timer);
     }
   }, []);
 
@@ -142,26 +134,30 @@ const Hero: React.FC = () => {
       {/* Loading state for the globe */}
       {!isLoaded && (
         <div className="absolute inset-0 flex items-center justify-center z-10 bg-slate-800/80">
-          <div className="w-16 h-16 border-4 border-t-blue-500 border-r-transparent border-b-blue-500 border-l-transparent rounded-full animate-spin"></div>
+          <div className="flex flex-col items-center">
+            <div className="w-16 h-16 border-4 border-t-blue-500 border-r-transparent border-b-blue-500 border-l-transparent rounded-full animate-spin mb-4"></div>
+            <p className="text-white text-lg">Lade 3D-Modell...</p>
+          </div>
         </div>
       )}
       
-      {/* Optimized Spline 3D Background with lazy loading */}
+      {/* Spline 3D Background */}
       <div className="absolute inset-0 w-full h-full z-0">
         <iframe
           ref={iframeRef}
           width="100%"
           height="100%"
           className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
-          allow="autoplay; fullscreen"
-          loading="lazy"
-          title="Earth Day and Night Spline"
+          allow="autoplay; fullscreen; camera; microphone; gyroscope; accelerometer; magnetometer; xr-spatial-tracking"
+          allowFullScreen
+          title="Interactive Earth 3D Model"
           onLoad={handleIframeLoad}
+          style={{ border: 'none' }}
         ></iframe>
       </div>
 
-      {/* Gradient overlay for better text readability and visual effect */}
-      <div className="absolute inset-0 bg-gradient-to-r from-slate-900/60 via-slate-800/40 to-slate-900/30 z-10"></div>
+      {/* Reduced gradient overlay for better visibility */}
+      <div className="absolute inset-0 bg-gradient-to-r from-slate-900/40 via-slate-800/20 to-slate-900/30 z-10"></div>
 
       {/* Animated particles effect */}
       <div className="absolute inset-0 z-5 opacity-30">
@@ -203,7 +199,7 @@ const Hero: React.FC = () => {
           </div>
           
           <div className="overflow-hidden mb-8">
-            <p className="text-xl text-gray-200 max-w-2xl animate-fadeIn opacity-0 leading-relaxed backdrop-blur-sm bg-slate-800/10 p-4 rounded-lg border-l-2 border-cyan-500" style={{ animationDelay: '1200ms', animationFillMode: 'forwards' }}>
+            <p className="text-xl text-gray-200 max-w-2xl animate-fadeIn opacity-0 leading-relaxed backdrop-blur-sm bg-slate-800/20 p-4 rounded-lg border-l-2 border-cyan-500" style={{ animationDelay: '1200ms', animationFillMode: 'forwards' }}>
               Eine Untersuchung darüber, wie Ultra-Fast-Fashion-Marken die Branchenlandschaft verändern und dabei zu erheblichen Umwelt- und sozialen Herausforderungen beitragen.
             </p>
           </div>
