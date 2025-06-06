@@ -43,6 +43,7 @@ const TypedText: React.FC<TypedTextProps> = ({ text, delay = 0, speed = 50 }) =>
     if (isIntersecting && !hasStarted) {
       setHasStarted(true);
       
+      // Delay start of typing
       const startTimeout = setTimeout(() => {
         const interval = setInterval(() => {
           setCurrentIndex((prevIndex: number) => {
@@ -106,18 +107,26 @@ const Hero: React.FC = () => {
   const [isLoaded, setIsLoaded] = React.useState<boolean>(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   
-  // Load the iframe immediately
+  // Lazy load the iframe
   useEffect(() => {
     if (iframeRef.current) {
-      // Set the source directly without lazy loading
-      iframeRef.current.src = "https://my.spline.design/earthdayandnightcopy-Ld5pB6lD4IBaq230SAgOMacr/";
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting && iframeRef.current) {
+            iframeRef.current.src = "https://my.spline.design/earthdayandnight-aR5pB6lD4IBaq230SAgOMacr/?quality=low";
+            observer.unobserve(iframeRef.current);
+          }
+        },
+        { threshold: 0.1 }
+      );
       
-      // Set loaded to true after a short delay to show the iframe
-      const timer = setTimeout(() => {
-        setIsLoaded(true);
-      }, 1000);
+      observer.observe(iframeRef.current);
       
-      return () => clearTimeout(timer);
+      return () => {
+        if (iframeRef.current) {
+          observer.disconnect();
+        }
+      };
     }
   }, []);
 
@@ -134,30 +143,27 @@ const Hero: React.FC = () => {
       {/* Loading state for the globe */}
       {!isLoaded && (
         <div className="absolute inset-0 flex items-center justify-center z-10 bg-slate-800/80">
-          <div className="flex flex-col items-center">
-            <div className="w-16 h-16 border-4 border-t-blue-500 border-r-transparent border-b-blue-500 border-l-transparent rounded-full animate-spin mb-4"></div>
-            <p className="text-white text-lg">Lade 3D-Modell...</p>
-          </div>
+          <div className="w-16 h-16 border-4 border-t-blue-500 border-r-transparent border-b-blue-500 border-l-transparent rounded-full animate-spin"></div>
         </div>
       )}
       
-      {/* Spline 3D Background */}
+      {/* Optimized Spline 3D Background with lazy loading */}
       <div className="absolute inset-0 w-full h-full z-0">
         <iframe
           ref={iframeRef}
-          width="100%"
+          width="40%"
           height="100%"
           className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
-          allow="autoplay; fullscreen; camera; microphone; gyroscope; accelerometer; magnetometer; xr-spatial-tracking"
-          allowFullScreen
-          title="Interactive Earth 3D Model"
+          allow="autoplay; fullscreen"
+          loading="lazy"
+          title="Earth Day and Night Spline"
+          style={{ pointerEvents: 'none' }}
           onLoad={handleIframeLoad}
-          style={{ border: 'none' }}
         ></iframe>
       </div>
 
-      {/* Reduced gradient overlay for better visibility */}
-      <div className="absolute inset-0 bg-gradient-to-r from-slate-900/40 via-slate-800/20 to-slate-900/30 z-10"></div>
+      {/* Gradient overlay for better text readability and visual effect */}
+      <div className="absolute inset-0 bg-gradient-to-r from-slate-900/80 via-slate-800/60 to-slate-900/50 z-10"></div>
 
       {/* Animated particles effect */}
       <div className="absolute inset-0 z-5 opacity-30">
@@ -199,7 +205,7 @@ const Hero: React.FC = () => {
           </div>
           
           <div className="overflow-hidden mb-8">
-            <p className="text-xl text-gray-200 max-w-2xl animate-fadeIn opacity-0 leading-relaxed backdrop-blur-sm bg-slate-800/20 p-4 rounded-lg border-l-2 border-cyan-500" style={{ animationDelay: '1200ms', animationFillMode: 'forwards' }}>
+            <p className="text-xl text-gray-200 max-w-2xl animate-fadeIn opacity-0 leading-relaxed backdrop-blur-sm bg-slate-800/10 p-4 rounded-lg border-l-2 border-cyan-500" style={{ animationDelay: '1200ms', animationFillMode: 'forwards' }}>
               Eine Untersuchung darüber, wie Ultra-Fast-Fashion-Marken die Branchenlandschaft verändern und dabei zu erheblichen Umwelt- und sozialen Herausforderungen beitragen.
             </p>
           </div>
